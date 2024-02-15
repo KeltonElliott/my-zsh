@@ -125,9 +125,9 @@ backup_config_files() {
         done
     done
 
-    echo -e "Linking new bash config file..."
+    echo -e "Linking new zsh config file..."
     ## Make symbolic link.
-    ln -svf ${GITPATH}/.bashrc $HOME/.bashrc
+    ln -svf ${GITPATH}/.zshrc $HOME/.zshrc
     ln -svf ${GITPATH}/starship.toml $HOME/.config/starship.toml
 }
 
