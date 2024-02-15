@@ -3,6 +3,9 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
+# Determine the directory where this script is located
+GITPATH="$(dirname "$(realpath "$0")")"
+
 # Function to display error messages in red
 echo_error() {
   echo -e "\033[31mERROR: $1\033[0m"
@@ -70,7 +73,7 @@ install_deps() {
 
 create_dirs() {
   # Declare an array of directories to be created, now including ~/.config explicitly
-  declare -a dirs=("$HOME/.config" "$HOME/Downloads" "$HOME/github" "$HOME/code")
+  declare -a dirs=("$HOME/.config" "$HOME/Downloads" "$HOME/github" "$HOME/code" "$HOME/backups")
   for dir in "${dirs[@]}"; do
     if [ ! -d "$dir" ]; then
       echo "Creating directory $dir..."
@@ -103,10 +106,36 @@ font_init() {
   echo "Cascadia Code Nerd Font installation complete. Please manually set it as the default font in your terminal application."
 }
 
+backup_config_files() {
+    echo "Searching and backing up .zshrc and starship.toml files to ~/backups"
+
+    # Define the backup directory and ensure it exists
+    backupDir="$HOME/backups"
+    mkdir -p "$backupDir"
+
+    # Files to search and backup
+    declare -a configFiles=(".zshrc" "starship.toml")
+
+    for configFile in "${configFiles[@]}"; do
+        # Find and backup config files
+        find "$HOME" -name "$configFile" 2>/dev/null | while read -r file; do
+            backupFileName="$(basename "$file").backup_$(date +%Y-%m-%d_%H-%M-%S)"
+            echo "Backing up $file to $backupDir/$backupFileName"
+            mv "$file" "$backupDir/$backupFileName"
+        done
+    done
+
+    echo -e "Linking new bash config file..."
+    ## Make symbolic link.
+    ln -svf ${GITPATH}/.bashrc $HOME/.bashrc
+    ln -svf ${GITPATH}/starship.toml $HOME/.config/starship.toml
+}
+
 # Call functions to install dependencies and create directories
 install_deps
 create_dirs
 font_init
+backup_config_files
 
 # Configure shell enhancements
 echo "Configuring Zsh enhancements..."
