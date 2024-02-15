@@ -138,4 +138,17 @@ create_dirs
 font_init
 backup_config_files
 
+# Configure shell enhancements
+echo "Configuring Zsh enhancements..."
+{
+  echo 'eval "$(starship init zsh)"'
+  echo 'source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh'
+  echo '[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh'
+  echo 'source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh'
+} >> ~/.zshrc || {
+  echo_error "Error configuring Zsh enhancements."
+  exit 1
+}
+
+
 echo "Installation and configuration complete. Please run 'source ~/.zshrc' or reopen your terminal to apply the changes."
