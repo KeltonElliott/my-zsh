@@ -1,136 +1,39 @@
-#!/bin/zsh
+### ---- ZSH HOME -----------------------------------
+export ZSH=$HOME/.zsh
 
-#######################################################
-# SOURCED ALIAS'S AND SCRIPTS by zachbrowne.me
-#######################################################
+### ---- autocompletions -----------------------------------
+fpath=(~/.zsh/site-functions $fpath)
+autoload -Uz compinit && compinit
 
-# Source global definitions (If applicable to Zsh)
-if [ -f /etc/zshrc ]; then
-	 . /etc/zshrc
-fi
+### ---- Completion options and styling -----------------------------------
+zstyle ':completion:*' menu select # selectable menu
+zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]-_}={[:upper:][:lower:]_-}' 'r:|=*' 'l:|=* r:|=*'  # case insensitive completion
+zstyle ':completion:*' special-dirs true # Complete . and .. special directories
+zstyle ':completion:*' list-colors '' # colorize completion lists
+zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01' # colorize kill list
+export WORDCHARS=${WORDCHARS//[\/]} # remove / from wordchars so that / is a seperator when deleting complete words
 
-# Zsh specific configurations
+### ---- Source other configs -----------------------------------
+[[ -f $ZSH/config/history.zsh ]] && source $ZSH/config/history.zsh
+[[ -f $ZSH/config/aliases.zsh ]] && source $ZSH/config/aliases.zsh
 
-#######################################################
-# EXPORTS
-#######################################################
+### ---- Source plugins -----------------------------------
+[[ -f $ZSH/plugins/plugins.zsh ]] && source $ZSH/plugins/plugins.zsh
 
-# Expand the history size
-export HISTFILESIZE=10000
-export HISTSIZE=500
+### ---- gpg agent config with pinentry-mac ---------
+export GPG_TTY=$(tty) # based on this guide https://gist.github.com/troyfontaine/18c9146295168ee9ca2b30c00bd1b41e
 
-# Don't put duplicate lines or lines starting with space in the history.
-export HISTCONTROL=ignoreboth
+### ---- load pyenv ---------
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"
 
-# Automatically trim long paths in the prompt (requires prompt theme support)
-export PROMPT_DIRTRIM=2
+### add local bin to path
+export PATH=$HOME/bin:$PATH
 
-# Set the default editor
-export EDITOR=nvim
-export VISUAL=nvim
+### ---- load sdkman ---------
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# Alias definitions, replace 'batcat' with 'bat' on macOS if installed
-if command -v bat > /dev/null; then
-    alias cat='bat'
-fi
-
-# Color support for 'ls'
-export CLICOLOR=1
-export LSCOLORS=GxFxCxDxBxegedabagaced
-
-# To have colors for grep commands
-alias grep='grep --color=auto'
-
-# Man pages color
-export LESS_TERMCAP_mb=$'\E[01;31m'
-export LESS_TERMCAP_md=$'\E[01;31m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_se=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[01;44;33m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[01;32m'
-
-#######################################################
-# MACHINE SPECIFIC ALIAS'S
-#######################################################
-
-alias web='cd /var/www/html'
-
-#######################################################
-# GENERAL ALIAS'S
-#######################################################
-
-alias da='date "+%Y-%m-%d %A %T %Z"'
-alias cp='cp -i'
-alias mv='mv -i'
-alias rm='rm -i'
-alias mkdir='mkdir -p'
-alias ps='ps auxf'
-alias ping='ping -c 5'
-alias less='less -R'
-alias cls='clear'
-alias ll='ls -lFh'
-alias la='ls -AFh'
-alias l='ls -CF'
-
-#######################################################
-# FUNCTIONS
-#######################################################
-
-edit() {
-    if command -v nvim > /dev/null; then
-        nvim "$@"
-    else
-        vim "$@"
-    fi
-}
-
-sedit() {
-    if command -v nvim > /dev/null; then
-        sudo nvim "$@"
-    else
-        sudo vim "$@"
-    fi
-}
-
-# Function to extract archives
-extract() {
-     if [ -f $1 ]; then
-         case $1 in
-             *.tar.bz2)   tar xjf $1     ;;
-             *.tar.gz)    tar xzf $1     ;;
-             *.bz2)       bunzip2 $1     ;;
-             *.rar)       unrar x $1     ;;
-             *.gz)        gunzip $1      ;;
-             *.tar)       tar xf $1      ;;
-             *.tbz2)      tar xjf $1     ;;
-             *.tgz)       tar xzf $1     ;;
-             *.zip)       unzip $1       ;;
-             *.Z)         uncompress $1  ;;
-             *.7z)        7z x $1        ;;
-             *)           echo "'$1' cannot be extracted via extract()" ;;
-         esac
-     else
-         echo "'$1' is not a valid file"
-     fi
-}
-
-#######################################################
-# Starship Prompt
-#######################################################
-
-# Install Starship - curl -sS https://starship.rs/install.sh | sh
-
+### ---- Load Starship -----------------------------------
 eval "$(starship init zsh)"
-
-#######################################################
-# Autojump
-#######################################################
-
-if [ -f /usr/local/etc/profile.d/autojump.sh ]; then
-    . /usr/local/etc/profile.d/autojump.sh
-elif [ -f $(brew --prefix)/etc/profile.d/autojump.sh ]; then
-    . $(brew --prefix)/etc/profile.d/autojump.sh
-else
-    echo "Autojump script not found."
-fi
