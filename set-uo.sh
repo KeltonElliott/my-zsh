@@ -8,6 +8,33 @@ echo_error() {
   echo -e "\033[31mERROR: $1\033[0m"
 }
 
+# Function to prompt user to proceed with execution
+prompt_for_confirmation() {
+  echo "This script will do the following:"
+  echo "- Install Homebrew (if not already installed)"
+  echo "- Install the following packages using Homebrew:"
+  echo "  - Starship"
+  echo "  - Zsh syntax highlighting"
+  echo "  - Autojump"
+  echo "  - Zsh autosuggestions"
+  echo "  - Git"
+  echo "  - Visual Studio Code"
+  echo "- Create the following directories in your home folder:"
+  echo "  - .config"
+  echo "  - Downloads"
+  echo "  - github"
+  echo "  - code"
+  echo "- Download and install the Cascadia Code Nerd Font"
+  echo "- Configure Zsh enhancements and the Starship prompt"
+  echo "Do you want to continue? (y/n)"
+  
+  read answer
+  if [[ "$answer" != "y" ]]; then
+    echo_error "Exiting script."
+    exit 1
+  fi
+}
+
 install_deps() {
   # Check for Homebrew, install if we don't have it
   if test ! $(which brew); then
