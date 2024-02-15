@@ -107,24 +107,31 @@ font_init() {
 }
 
 backup_config_files() {
-    echo "Searching and backing up .zshrc and starship.toml files to ~/backups"
+    echo "Backing up .zshrc and starship.toml files to ~/backups..."
 
-    # Define the backup directory and ensure it exists
+    # Define the path to the backups directory
     backupDir="$HOME/backups"
-    mkdir -p "$backupDir"
 
-    # Files to search and backup
-    declare -a configFiles=(".zshrc" "starship.toml")
+    # Define the paths of the files to be backed up
+    zshrcFile="$HOME/.zshrc"
+    starshipFile="$HOME/.config/starship.toml"
 
-    for configFile in "${configFiles[@]}"; do
-        # Find and backup config files
-        find "$HOME" -name "$configFile" 2>/dev/null | while read -r file; do
-            backupFileName="$(basename "$file").backup_$(date +%Y-%m-%d_%H-%M-%S)"
-            echo "Backing up $file to $backupDir/$backupFileName"
-            mv "$file" "$backupDir/$backupFileName"
-        done
-    done
+    # Backup .zshrc if it exists
+    if [[ -f "$zshrcFile" ]]; then
+        echo "Backing up .zshrc to $backupDir"
+        mv "$zshrcFile" "$backupDir/.zshrc.backup_$(date +%Y-%m-%d_%H-%M-%S)"
+    else
+        echo ".zshrc does not exist, skipping."
+    fi
 
+    # Backup starship.toml if it exists
+    if [[ -f "$starshipFile" ]]; then
+        echo "Backing up starship.toml to $backupDir"
+        mv "$starshipFile" "$backupDir/starship.toml.backup_$(date +%Y-%m-%d_%H-%M-%S)"
+    else
+        echo "starship.toml does not exist, skipping."
+    fi
+    
     echo -e "Linking new zsh config file..."
     ## Make symbolic link.
     ln -svf ${GITPATH}/.zshrc $HOME/.zshrc
