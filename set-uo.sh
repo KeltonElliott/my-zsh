@@ -1,0 +1,95 @@
+#!/bin/zsh
+
+# Exit immediately if a command exits with a non-zero status.
+set -e
+
+# Function to display error messages in red
+echo_error() {
+  echo -e "\033[31mERROR: $1\033[0m"
+}
+
+install_deps() {
+  # Check for Homebrew, install if we don't have it
+  if test ! $(which brew); then
+    echo "Installing Homebrew..."
+    /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || {
+      echo_error "Error installing Homebrew. Please check your internet connection and permissions."
+      exit 1
+    }
+  fi
+
+  # Update Homebrew and upgrade any already-installed formulae
+  echo "Updating and upgrading Homebrew packages..."
+  brew update && brew upgrade || {
+    echo_error "Error updating/upgrading Homebrew packages."
+    exit 1
+  }
+
+  # Install dependencies
+  for package in starship zsh-syntax-highlighting autojump zsh-autosuggestions git; do
+    echo "Installing $package..."
+    brew install $package || {
+      echo_error "Error installing $package."
+      exit 1
+    }
+  done
+}
+
+create_dirs() {
+  # Declare an array of directories to be created, now including ~/.config explicitly
+  declare -a dirs=("$HOME/.config" "$HOME/github" "$HOME/code")
+  for dir in "${dirs[@]}"; do
+    echo "Creating directory $dir..."
+    mkdir -p "$dir" || {
+      echo_error "Error creating directory $dir."
+      exit 1
+    }
+  done
+}
+
+font_init() {
+  # Define font URL
+  font_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/CascadiaCode.zip"
+  downloads_dir="$HOME/Downloads"
+  font_dir="$HOME/Library/Fonts"
+
+  echo "Downloading Cascadia Code Nerd Font to Downloads folder..."
+  
+  # Download font to Downloads folder
+  curl -L "$font_url" -o "$downloads_dir/CascadiaCode.zip"
+  
+  # Unzip and install font
+  echo "Installing font..."
+  unzip -o "$downloads_dir/CascadiaCode.zip" -d "$font_dir"
+  rm "$downloads_dir/CascadiaCode.zip" # Clean up zip file after installation
+
+  echo "Cascadia Code Nerd Font installation complete. Please manually set it as the default font in your terminal application."
+}
+
+# Call functions to install dependencies and create directories
+install_deps
+create_dirs
+font_init
+
+# Configure shell enhancements
+echo "Configuring Zsh enhancements..."
+{
+  echo 'eval "$(starship init zsh)"'
+  echo 'source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh'
+  echo '[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh'
+  echo 'source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh'
+} >> ~/.zshrc || {
+  echo_error "Error configuring Zsh enhancements."
+  exit 1
+}
+
+# Write the Starship configuration
+echo "Configuring Starship..."
+cat <<EOF >~/.config/starship.toml
+# Your Starship configuration goes here
+EOF || {
+  echo_error "Error configuring Starship."
+  exit 1
+}
+
+echo "Installation and configuration complete. Please run 'source ~/.zshrc' or reopen your terminal to apply the changes."
