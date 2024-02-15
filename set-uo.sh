@@ -21,7 +21,6 @@ prompt_for_confirmation() {
   echo "  - Visual Studio Code"
   echo "- Create the following directories in your home folder:"
   echo "  - .config"
-  echo "  - Downloads"
   echo "  - github"
   echo "  - code"
   echo "- Download and install the Cascadia Code Nerd Font"
@@ -71,13 +70,17 @@ install_deps() {
 
 create_dirs() {
   # Declare an array of directories to be created, now including ~/.config explicitly
-  declare -a dirs=("$HOME/.config" "$HOME/github" "$HOME/code")
+  declare -a dirs=("$HOME/.config" "$HOME/Downloads" "$HOME/github" "$HOME/code")
   for dir in "${dirs[@]}"; do
-    echo "Creating directory $dir..."
-    mkdir -p "$dir" || {
-      echo_error "Error creating directory $dir."
-      exit 1
-    }
+    if [ ! -d "$dir" ]; then
+      echo "Creating directory $dir..."
+      mkdir -p "$dir" || {
+        echo_error "Error creating directory $dir."
+        exit 1
+      }
+    else
+      echo "Ensuring directory $dir exists..."
+    fi
   done
 }
 
