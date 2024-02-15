@@ -150,13 +150,4 @@ echo "Configuring Zsh enhancements..."
   exit 1
 }
 
-# Write the Starship configuration
-echo "Configuring Starship..."
-cat <<EOF >~/.config/starship.toml
-# Your Starship configuration goes here
-EOF || {
-  echo_error "Error configuring Starship."
-  exit 1
-}
-
 echo "Installation and configuration complete. Please run 'source ~/.zshrc' or reopen your terminal to apply the changes."
