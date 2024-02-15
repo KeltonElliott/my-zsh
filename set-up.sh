@@ -132,6 +132,7 @@ backup_config_files() {
 }
 
 # Call functions to install dependencies and create directories
+prompt_for_confirmation
 install_deps
 create_dirs
 font_init
