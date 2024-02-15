@@ -33,6 +33,13 @@ install_deps() {
       exit 1
     }
   done
+
+  # Install Visual Studio Code
+  echo "Installing Visual Studio Code..."
+  brew install --cask visual-studio-code || {
+    echo_error "Error installing Visual Studio Code."
+    exit 1
+  }
 }
 
 create_dirs() {
