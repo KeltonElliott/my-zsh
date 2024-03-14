@@ -23,7 +23,7 @@ The script installs the following software:
 - **[Zsh Autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)**: Suggests commands as you type based on history and completions.
 - **[Git](https://git-scm.com/)**: A free and open-source distributed version control system.
 - **[Zsh Completions](https://github.com/zsh-users/zsh-completions)**: Additional completion definitions for Zsh.
-- - **[Pyenv](https://github.com/pyenv/pyenv)**: A tool that allows for easy installation and management of multiple Python versions on a single system. It enables you to switch between Python versions on a per-project basis, ensuring compatibility and ease of development across different environments.
+- **[Pyenv](https://github.com/pyenv/pyenv)**: A tool that allows for easy installation and management of multiple Python versions on a single system. It enables you to switch between Python versions on a per-project basis, ensuring compatibility and ease of development across different environments.
 
 ### Homebrew Casks
 
