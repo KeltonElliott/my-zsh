@@ -1,5 +1,34 @@
 #!/bin/zsh
 
+# Formulae to be installed
+formulae = (
+  "Starship"
+  "zsh-syntax-highlighting"
+  "autojump"
+  "zsh-autosuggestions"
+  "git"
+)
+
+# Casks to be installed
+casks = (
+  "visual-studio-code"
+  "raycast"
+  "docker-desktop"
+  "alt-tab"
+  "hiddenbar"
+  "stats"
+  "firefox-developer-edition"
+  "spotify"
+)
+
+# Directories
+directories=(
+  "$HOME/.config"
+  "$HOME/github"
+  "$HOME/code"
+  "$HOME/backups"
+)
+
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
@@ -15,17 +44,18 @@ echo_error() {
 prompt_for_confirmation() {
   echo "This script will do the following:"
   echo "- Install Homebrew (if not already installed)"
-  echo "- Install the following packages using Homebrew:"
-  echo "  - Starship"
-  echo "  - Zsh syntax highlighting"
-  echo "  - Autojump"
-  echo "  - Zsh autosuggestions"
-  echo "  - Git"
-  echo "  - Visual Studio Code"
+  echo "- Install the following formulae using Homebrew:"
+  for formula in "${formulae[@]}"; do
+    echo "  - $formula"
+  done
+  echo "- Install the following applications using Homebrew Casks:"
+  for cask in "${casks[@]}"; do
+    echo "  - $cask"
+  done
   echo "- Create the following directories in your home folder:"
-  echo "  - .config"
-  echo "  - github"
-  echo "  - code"
+  for dir in "${directories[@]}"; do
+    echo "  - $dir"
+  done
   echo "- Download and install the Cascadia Code Nerd Font"
   echo "- Configure Zsh enhancements and the Starship prompt"
   echo "Do you want to continue? (y/n)"
@@ -54,27 +84,31 @@ install_deps() {
     exit 1
   }
 
-  # Install dependencies
-  for package in starship zsh-syntax-highlighting autojump zsh-autosuggestions git; do
-    echo "Installing $package..."
-    brew install $package || {
-      echo_error "Error installing $package."
+  # Tap the homebrew/cask-versions for Firefox Developer Edition
+  echo "Tapping homebrew/cask-versions..."
+  brew tap homebrew/cask-versions
+
+  # Install formulae
+  for formula in "${formulae[@]}"; do
+    echo "Installing $formula..."
+    brew install $formula || {
+      echo_error "Error installing $formula."
       exit 1
     }
   done
 
-  # Install Visual Studio Code
-  echo "Installing Visual Studio Code..."
-  brew install --cask visual-studio-code || {
-    echo_error "Error installing Visual Studio Code."
-    exit 1
-  }
+  # Install casks
+  for cask in "${casks[@]}"; do
+    echo "Installing $cask..."
+    brew install --cask $cask || {
+      echo_error "Error installing $cask."
+      exit 1
+    }
+  done
 }
 
 create_dirs() {
-  # Declare an array of directories to be created, now including ~/.config explicitly
-  declare -a dirs=("$HOME/.config" "$HOME/Downloads" "$HOME/github" "$HOME/code" "$HOME/backups")
-  for dir in "${dirs[@]}"; do
+  for dir in "${directories[@]}"; do
     if [ ! -d "$dir" ]; then
       echo "Creating directory $dir..."
       mkdir -p "$dir" || {
@@ -88,6 +122,7 @@ create_dirs() {
 }
 
 font_init() {
+
   # Define font URL
   font_url="https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/CascadiaCode.zip"
   downloads_dir="$HOME/Downloads"
@@ -158,4 +193,6 @@ echo "Configuring Zsh enhancements..."
 }
 
 
-echo "Installation and configuration complete. Please run 'source ~/.zshrc' or reopen your terminal to apply the changes."
+echo "Installation and configuration complete. Please run: 'source ~/.zshrc' or reopen your terminal to apply the changes."
+echo "To make this script executable, run: 'chmod +x setup.sh'"
+echo "To execute the script, run: './setup.sh'"
