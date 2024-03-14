@@ -1,1 +1,1 @@
-# my-bash
+# my-zsh
