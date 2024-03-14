@@ -1,4 +1,4 @@
-# Setup Script Documentation
+# my-zsh Documentation
 
 This document outlines the functionality and purpose of the provided setup script. The script is designed to automate the setup process on a macOS system, installing a variety of development tools and utilities, creating necessary directories, and configuring the Zsh shell environment for optimal use.
 
