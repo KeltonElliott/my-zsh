@@ -8,6 +8,7 @@ formulae = (
   "zsh-autosuggestions"
   "git"
   "zsh-completions"
+  "pyenv"
 )
 
 # Casks to be installed
@@ -183,12 +184,19 @@ font_init
 backup_config_files
 
 # Configure shell enhancements
-echo "Configuring Zsh enhancements..."
+echo "Configuring Zsh enhancements and Pyenv initialization..."
 {
   echo 'eval "$(starship init zsh)"'
   echo 'source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh'
   echo '[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh'
   echo 'source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh'
+  # Pyenv initialization
+  echo 'export PYENV_ROOT="$HOME/.pyenv"'
+  echo 'export PATH="$PYENV_ROOT/bin:$PATH"'
+  echo 'if command -v pyenv 1>/dev/null 2>&1; then'
+  echo '  eval "$(pyenv init --path)"'
+  echo 'fi'
+  echo 'if command -v pyenv virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi'
 } >> ~/.zshrc || {
   echo_error "Error configuring Zsh enhancements."
   exit 1
