@@ -37,6 +37,23 @@ The script installs the following software:
 - **[Spotify](https://www.spotify.com/)**: A digital music service that gives you access to millions of songs.
 - **[iTerm2](https://iterm2.com/)**: iTerm2 is a replacement for Terminal and the successor to iTerm.
 
+## Font Installation
+
+- **[Cascadia Code Nerd Font](https://github.com/ryanoasis/nerd-fonts/releases/tag/v2.1.0)**: Cascadia Code is a purpose-built font for coding. The script downloads and installs the Nerd Font variant of Cascadia Code, which includes a variety of glyphs and icons to enhance the visual appeal of your terminal and editor.
+
+## How to Use the Font
+
+After the script installs the Cascadia Code Nerd Font, you need to manually set it as the default font in your terminal application. The process varies depending on the terminal you use, but generally, you can find font settings in the preferences section of your terminal app.
+
+### For iTerm2
+
+1. Open iTerm2.
+2. Go to iTerm2 > Preferences or press `Cmd + ,` to open the preferences panel.
+3. Navigate to the Profiles tab.
+4. Under the Text tab, find the Font section and click the Change Font button.
+5. Select `CaskaydiaCove Nerd Font` (the name might slightly vary) from the list and adjust the size to your liking.
+6. Click OK to apply the changes.
+
 ## Directories Created
 
 The script creates the following directories in the user's home folder:
