@@ -16,7 +16,6 @@ formulae=(
 casks=(
   "visual-studio-code"
   "raycast"
-  "docker-desktop"
   "alt-tab"
   "hiddenbar"
   "stats"
