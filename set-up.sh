@@ -204,6 +204,4 @@ echo "Configuring Zsh enhancements and Pyenv initialization..."
 
 
 echo "Installation and configuration complete. Please run: 'source ~/.zshrc' or reopen your terminal to apply the changes."
-echo "To make this script executable, run: 'chmod +x setup.sh'"
-echo "To execute the script, run: './setup.sh'"
 echo "Please review the READNE.md document for all details regarding this script"
