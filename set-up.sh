@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # Formulae to be installed
-formulae = (
+formulae=(
   "Starship"
   "zsh-syntax-highlighting"
   "autojump"
@@ -12,7 +12,8 @@ formulae = (
 )
 
 # Casks to be installed
-casks = (
+
+casks=(
   "visual-studio-code"
   "raycast"
   "docker-desktop"
